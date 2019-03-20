@@ -30,9 +30,7 @@ export class RsisearchService {
     )
   }
 
-  getDetails(id) {
-    return this.http.get(`${this.url}?i=${id}&plot=full`);
-  }
+
 
   
 }

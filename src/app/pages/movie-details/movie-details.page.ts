@@ -11,14 +11,7 @@ export class MovieDetailsPage implements OnInit {
   information = null;
   constructor(private activatedRoute: ActivatedRoute, private rsisearchService: RsisearchService) { }
 
-  ngOnInit() {
-    let id = this.activatedRoute.snapshot.paramMap.get('id');
-
-    this.rsisearchService.getDetails(id).subscribe( result => {
-      console.log('details: ', result);
-      this.information = result;
-    })
-  }
+  ngOnInit() {  }
 
   openWebsite() {
     window.open(this.information.Website, '_blank');
