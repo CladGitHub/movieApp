@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MovieService } from 'src/app/services/movie.service';
+import { RsisearchService } from 'src/app/services/rsisearch.service';
 
 @Component({
   selector: 'app-movie-details',
@@ -9,12 +9,12 @@ import { MovieService } from 'src/app/services/movie.service';
 })
 export class MovieDetailsPage implements OnInit {
   information = null;
-  constructor(private activatedRoute: ActivatedRoute, private movieService: MovieService) { }
+  constructor(private activatedRoute: ActivatedRoute, private rsisearchService: RsisearchService) { }
 
   ngOnInit() {
     let id = this.activatedRoute.snapshot.paramMap.get('id');
 
-    this.movieService.getDetails(id).subscribe( result => {
+    this.rsisearchService.getDetails(id).subscribe( result => {
       console.log('details: ', result);
       this.information = result;
     })
