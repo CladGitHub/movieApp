@@ -5,7 +5,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'movies', pathMatch: 'full' },
   { path: 'movies', loadChildren: './pages/movies/movies.module#MoviesPageModule' },
   { path: 'movies/:id', loadChildren: './pages/movie-details/movie-details.module#MovieDetailsPageModule' },
-  { path: 'whattsapp', loadChildren: './whattsapp/whattsapp.module#WhattsappPageModule' }
+  { path: 'whattsapp', loadChildren: './whattsapp/whattsapp.module#WhattsappPageModule' },
+  { path: 'rgsearch', loadChildren: './pages/rgsearch/rgsearch.module#RgsearchPageModule' }
 ];
 
 @NgModule({

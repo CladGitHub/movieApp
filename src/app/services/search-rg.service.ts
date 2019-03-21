@@ -1,0 +1,16 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class SearchRGService {
+	
+	constructor(private http: HttpClient) { }
+
+	loadEdition(path: string){return this.http.get(path);}
+
+}
