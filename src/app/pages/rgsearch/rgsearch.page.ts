@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { SearchRGService } from '../../services/search-rg.service';
 import { Observable } from 'rxjs';
 
+type MyArrayType = Array<{id: number, audioID: string, rgDate: string, phraseTranscript: string, offset: string}>;
+
+var searchResults: MyArrayType = [];
+
 @Component({
   selector: 'app-rgsearch',
   templateUrl: './rgsearch.page.html',
@@ -10,36 +14,78 @@ import { Observable } from 'rxjs';
 
 export class RgsearchPage implements OnInit {
 
-	filePathList: string[] = ['/assets/json/RG/RG_01.03.2019_18-30_11392590.json','/assets/json/RG/RG_02.03.2019_18-30_11392221.json','assets/json/RG/RG_03.03.2019_18-30_11392509.json','/assets/json/RG/RG_04.03.2019_18-30_11398260.json','/assets/json/RG/RG_05.03.2019_18-30_11398491.json','/assets/json/RG/RG_06.03.2019_18-30_11398602.json','/assets/json/RG/RG_07.03.2019_18-30_11398377.json','/assets/json/RG/RG_08.03.2019_18-30_11403717.json','/assets/json/RG/RG_09.03.2019_18-30_11404725.json','/assets/json/RG/RG_10.03.2019_18-30_11418990.json','/assets/json/RG/RG_11.03.2019_18-30_11419302.json','/assets/json/RG/RG_12.03.2019_18-30_11419077.json','/assets/json/RG/RG_14.03.2019_18-30_11430693.json','/assets/json/RG/RG_15.03.2019_18-30_11430816.json','/assets/json/RG/RG_17.03.2019_18-30_11447819.json','/assets/json/RG/RG_18.03.2019_18-30_11478092.json'];
+	results: Observable<any>;
 	rgDB = null;
 
 	constructor(private searchRGService: SearchRGService) {}
 	
-	getStatus(){
-		console.log("Loaded editions ("+ this.rgDB.editions.length +")");
-		this.rgDB.editions.forEach((edition) => {
-			console.log(edition.jobName);
-		});
-	}
-	
-	search(){
-		this.searchWord('elezioni');
-		this.searchWord('la');
-		this.searchWord('radio');
-		this.searchWord('ieri');
-		this.searchWord('Lugano');
-	}
-
 	searchWord(word: string){
+		var wordPosition = 0;
+		var jobNameSplit: string[];
 		var counter = 0;
 		this.rgDB.editions.forEach((edition) => {
+			wordPosition = 0;
 			edition.results.items.forEach((item) => {
 				item.alternatives.forEach((alternative) => {
-					if(alternative.content == word) counter = counter+1;
+					if(alternative.content.toLowerCase() == word.toLowerCase()){
+						//serch phrase start
+						var startPosition = this.searchPhraseStartFromWord(wordPosition,edition.results.items);
+						//serch phrase end
+						var endPosition = this.searchPhraseEndFormWord(wordPosition,edition.results.items);
+						//serch phrase start offset
+						var startOffset = this.searchPhraseStartOffset(startPosition, edition.results.items);
+						//write phrase
+						var transcriptedPhrase = this.writePhraseTranscript(startPosition, endPosition, edition.results.items);
+						
+						var splittetJobName = edition.jobName.split('_');
+						searchResults[counter] = {id: counter, audioID: splittetJobName[3], rgDate: splittetJobName[1], phraseTranscript: transcriptedPhrase, offset: startOffset};
+						counter = counter+1;
+					}
 				});
+				wordPosition = wordPosition+1;
 			});
 		});
-		console.log("word \""+ word +"\" found "+ counter +" times");
+		console.log("word \"" + word + "\" found " + counter + " times.");
+		console.log(searchResults);
+		this.results = searchResults;
+	}
+
+	searchPhraseStartFromWord(wordPosition: number, transcriptJSON: any):number {
+		for (var i = wordPosition; i >= 0; i--){
+			if (transcriptJSON[i].alternatives[0].content == '.' || transcriptJSON[i].alternatives[0].content == '!' || transcriptJSON[i].alternatives[0].content == '?'){
+				return i+1;
+			}
+		}
+	}
+	searchPhraseEndFormWord(wordPosition: number, transcriptJSON: any):number {
+		for (var i = wordPosition; i < transcriptJSON.length; i++){
+			if (transcriptJSON[i].alternatives[0].content == '.' || transcriptJSON[i].alternatives[0].content == '!' || transcriptJSON[i].alternatives[0].content == '?'){
+				return i;
+			}
+		}
+	}
+	searchPhraseStartOffset(startPosition: number, transcriptJSON: {}):string {
+		return transcriptJSON[startPosition+1].start_time;
+	}
+	
+	writePhraseTranscript (startPos: number, endPos: number, transcriptJSON: {}):string {
+		var transcriptedPhrase = "";
+		var cnt = 0;
+		for (var i = startPos; i <= endPos; i++){
+			if (transcriptJSON[i].alternatives[0].content != "." && transcriptJSON[i].alternatives[0].content != "!" && transcriptJSON[i].alternatives[0].content != "?" && transcriptJSON[i].alternatives[0].content != "," && transcriptJSON[i].alternatives[0].content != ";" && transcriptJSON[i].alternatives[0].content != ":"){
+				if (cnt == 0) {
+					transcriptedPhrase = transcriptJSON[i].alternatives[0].content;
+				}
+				else {
+					transcriptedPhrase = transcriptedPhrase + " " + transcriptJSON[i].alternatives[0].content;
+				}
+			}
+			else{
+				transcriptedPhrase = transcriptedPhrase + transcriptJSON[i].alternatives[0].content;
+			}
+			cnt++;
+		}
+		return transcriptedPhrase;
 	}
 
 	ngOnInit() {	
