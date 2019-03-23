@@ -11,7 +11,7 @@ var searchResults: MyArrayType = [];
 })
 export class AudioSearchService {
 
-	audioSearchResults: Observable<any>;
+	audioSearchResults: MyArrayType;
 	rgDB = null;
 
 	constructor(private searchRGService: SearchRGService) {

@@ -10,8 +10,14 @@
 	
 	<ion-list>
 		<ion-item button *ngFor="let item of results" [routerLink]="['/', 'movies', item.id]">
-			<h2>{{item.phraseTranscript}}</h2>
-			<p>{{item.rgDate}}</p>
+			<ion-label text-wrap>
+				<ion-text color="primary">
+						<h3>{{item.phraseTranscript}}</h3>
+				</ion-text>
+				<ion-text color="warning">
+						<p>>Radiogiornale del {{item.rgDate}} delle 18h30</p>
+				</ion-text>
+		</ion-label>
 		</ion-item>
 	</ion-list>
 
