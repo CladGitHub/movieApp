@@ -32,22 +32,33 @@ export class GetjsongiuService {
     return messages;
   }
 
-  jasonize ( s : string) {
+  jasonize ( s : string, marker : number) {
     
+    var tmp_duration = 0.0;
+
     this.test = JSON.parse(s);
     console.log("test : " +  this.test);
     this.test.forEach(value=> {
-      console.log( "tento : " + value.title);
-      var splittato = value.title.split(" ");
-      console.log("splittato = ", splittato)
-      if (splittato.length > 0 )  {
-        console.log(" Nome : ", splittato[0]);
-        this.autore = splittato[0];
-        console.log(" Titolo : ", value.title.substring( splittato[0].length, value.title.length));
-        this.title = value.title.substring( splittato[0].length, value.title.length);
-      }
-        console.log(" ritento : " + value.text);
-        this.lancio = value.text;
+        
+
+        tmp_duration = tmp_duration + parseFloat(value.realDurationInMilliSecs);
+        
+        console.log( " duration so far : ", tmp_duration);
+        if (tmp_duration > marker){
+          // ho trovato il pezzo giusto ?
+          console.log( "tento : " + value.title);
+          var splittato = value.title.split(" ");
+          console.log("splittato = ", splittato)
+          if (splittato.length > 0 )  {
+            console.log(" Nome : ", splittato[0]);
+            this.autore = splittato[0];
+            console.log(" Titolo : ", value.title.substring( splittato[0].length, value.title.length));
+            this.title = value.title.substring( splittato[0].length, value.title.length);
+          }
+          console.log(" ritento : " + value.text);
+          this.lancio = value.text;
+          return;
+        }
     })
   }
 
@@ -61,7 +72,7 @@ export class GetjsongiuService {
     console.log( "marker : " , marker);
     this.httpClient.get("/assets/json/" + id + ".json", {responseType: 'text'}).subscribe(results => { 
       //console.log('RAW: ', results);
-      this.jasonize( results) ;
+      this.jasonize( results, marker ) ;
       this.result = this.splitmessages( results );
       this.result.forEach(element => {
         //console.log("element: " + element);
