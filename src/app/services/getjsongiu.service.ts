@@ -54,9 +54,13 @@ export class GetjsongiuService {
   showFilegiu( id : string, offset : string )  {
 
    // and then:
-    console.log("showfile") ; 
+    console.log("showfile") ;
+    
+    var marker = parseFloat( offset);
+    marker = marker * 1000.0;
+    console.log( "marker : " , marker);
     this.httpClient.get("/assets/json/" + id + ".json", {responseType: 'text'}).subscribe(results => { 
-      console.log('RAW: ', results);
+      //console.log('RAW: ', results);
       this.jasonize( results) ;
       this.result = this.splitmessages( results );
       this.result.forEach(element => {
