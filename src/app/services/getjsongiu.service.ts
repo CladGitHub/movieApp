@@ -20,6 +20,11 @@ export class GetjsongiuService {
   tmp : Promise<JSON>;
   constructor(private httpClient: HttpClient) { }
 
+  title : string = "";
+  autore : string = "";
+  lancio : string = "";
+
+
 
   splitmessages(x : string) {
     var messages = x.substring(1, x.length-1).split("},{");
@@ -28,11 +33,21 @@ export class GetjsongiuService {
   }
 
   jasonize ( s : string) {
+    
     this.test = JSON.parse(s);
     console.log("test : " +  this.test);
     this.test.forEach(value=> {
       console.log( "tento : " + value.title);
-      console.log(" ritento : " + value.text);
+      var splittato = value.title.split(" ");
+      console.log("splittato = ", splittato)
+      if (splittato.length > 0 )  {
+        console.log(" Nome : ", splittato[0]);
+        this.autore = splittato[0];
+        console.log(" Titolo : ", value.title.substring( splittato[0].length, value.title.length));
+        this.title = value.title.substring( splittato[0].length, value.title.length);
+      }
+        console.log(" ritento : " + value.text);
+        this.lancio = value.text;
     })
   }
 
