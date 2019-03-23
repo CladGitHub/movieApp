@@ -51,7 +51,7 @@ export class GetjsongiuService {
     })
   }
 
-  getFilegiu( id : string )  {
+  showFilegiu( id : string, offset : string )  {
 
    // and then:
     console.log("showfile") ; 

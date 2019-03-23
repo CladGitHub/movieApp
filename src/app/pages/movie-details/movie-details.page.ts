@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MovieService } from 'src/app/services/movie.service';
 import { AudioSearchService } from 'src/app/services/audio-search.service';
 import { Observable } from 'rxjs';
+import { GetjsongiuService } from 'src/app/services/getjsongiu.service';
 
 type MyArrayType = Array<{id: number, audioID: string, rgDate: string, phraseTranscript: string, offset: string}>;
 
@@ -21,10 +22,10 @@ export class MovieDetailsPage implements OnInit {
   rgData : string = "";
   audioID : string = "";
   phraseTranscript : string = "";
-
-
+  source : string = "";
+  offset : string = "";
   
-  constructor(private activatedRoute: ActivatedRoute, private movieService: MovieService, private audiosearch: AudioSearchService) { }
+  constructor(private activatedRoute: ActivatedRoute, private movieService: MovieService, private audiosearch: AudioSearchService, private getfilegiu: GetjsongiuService) { }
 
   ngOnInit() {
     let id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -35,10 +36,15 @@ export class MovieDetailsPage implements OnInit {
     console.log("ritento : ", audioSearchRes.phraseTranscript);
     this.phraseTranscript = audioSearchRes.phraseTranscript;
     this.audioID = audioSearchRes.audioID;
+    console.log("audio ID = ", this.audioID)
     this.rgData = audioSearchRes.rgDate;
-
+    this.offset = audioSearchRes.offset;
     
+    this.source = "http://tp.srgssr.ch/p/rsi/inline?urn=urn:rsi:audio:" + this.audioID;
     
+    console.log("passo da qui prima i prendere giuliano")
+    this.getfilegiu.showFilegiu( this.audioID, this.offset );
+   
 
   }
 
