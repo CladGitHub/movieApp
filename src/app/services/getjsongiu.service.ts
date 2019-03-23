@@ -51,12 +51,12 @@ export class GetjsongiuService {
     })
   }
 
-  showFilegiu( id : string )  {
+  getFilegiu( id : string )  {
 
    // and then:
     console.log("showfile") ; 
-    this.httpClient.get("/assets/jsongiu/" + id + ".json", {responseType: 'text'}).subscribe(results => { 
-      //console.log('RAW: ', results);
+    this.httpClient.get("/assets/json/" + id + ".json", {responseType: 'text'}).subscribe(results => { 
+      console.log('RAW: ', results);
       this.jasonize( results) ;
       this.result = this.splitmessages( results );
       this.result.forEach(element => {
