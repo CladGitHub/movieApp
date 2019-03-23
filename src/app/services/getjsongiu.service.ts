@@ -38,28 +38,39 @@ export class GetjsongiuService {
 
     this.test = JSON.parse(s);
     console.log("test : " +  this.test);
-    this.test.forEach(value=> {
-        
 
-        tmp_duration = tmp_duration + parseFloat(value.realDurationInMilliSecs);
-        
-        console.log( " duration so far : ", tmp_duration);
-        if (tmp_duration > marker){
-          // ho trovato il pezzo giusto ?
-          console.log( "tento : " + value.title);
-          var splittato = value.title.split(" ");
-          console.log("splittato = ", splittato)
-          if (splittato.length > 0 )  {
-            console.log(" Nome : ", splittato[0]);
-            this.autore = splittato[0];
-            console.log(" Titolo : ", value.title.substring( splittato[0].length, value.title.length));
-            this.title = value.title.substring( splittato[0].length, value.title.length);
+    var BreakException = {};
+   
+    try {
+      this.test.forEach(value=> {
+          
+
+          tmp_duration = tmp_duration + parseFloat(value.realDurationInMilliSecs);
+          
+          console.log( " duration so far : ", tmp_duration);
+          if (tmp_duration > marker){
+            // ho trovato il pezzo giusto ?
+            console.log(" -------------- TROVATO MAGGIORE -------------")
+            console.log( "tento : " + value.title);
+            var splittato = value.title.split(" ");
+            console.log("splittato = ", splittato)
+            if (splittato.length > 0 )  {
+              console.log(" Nome : ", splittato[0]);
+              this.autore = splittato[0];
+              console.log(" Titolo : ", value.title.substring( splittato[0].length, value.title.length));
+              this.title = value.title.substring( splittato[0].length, value.title.length);
+              
+            }
+            console.log(" ritento : " + value.text);
+            this.lancio = value.text;
+            throw BreakException;
+ 
+            
           }
-          console.log(" ritento : " + value.text);
-          this.lancio = value.text;
-          return;
-        }
-    })
+      })
+    } catch (e) {
+      if (e !== BreakException) throw e;
+    }
   }
 
   showFilegiu( id : string, offset : string )  {
