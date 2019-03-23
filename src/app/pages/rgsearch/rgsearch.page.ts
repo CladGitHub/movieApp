@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';;
 import { AudioSearchService } from '../../services/audio-search.service';
 import { Observable } from 'rxjs';
+type MyArrayType = Array<{id: number, audioID: string, rgDate: string, phraseTranscript: string, offset: string}>;
 
 @Component({
   selector: 'app-rgsearch',
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
 
 export class RgsearchPage implements OnInit {
 
-	results: Observable<any>;
+	results: MyArrayType;
 	rgDB = null;
 
 	constructor(private audioSearchService: AudioSearchService) {}

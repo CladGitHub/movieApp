@@ -11,7 +11,7 @@ var searchResults: MyArrayType = [];
 })
 export class AudioSearchService {
 
-	audioSearchResults: Observable<any>;
+	audioSearchResults: MyArrayType;
 	rgDB = null;
 
 	constructor(private searchRGService: SearchRGService) {
@@ -23,7 +23,6 @@ export class AudioSearchService {
 	
 	searchWord(word: string){
 		var wordPosition = 0;
-		var jobNameSplit: string[];
 		var counter = 0;
 		searchResults = [];
 		this.rgDB.editions.forEach((edition) => {
@@ -68,7 +67,9 @@ export class AudioSearchService {
 		}
 	}
 	searchPhraseStartOffset(startPosition: number, transcriptJSON: {}):string {
-		return transcriptJSON[startPosition+1].start_time;
+    if (transcriptJSON[startPosition+1].type != "punctuation"){
+      return transcriptJSON[startPosition+1].start_time;
+    }
 	}
 	
 	writePhraseTranscript (startPos: number, endPos: number, transcriptJSON: {}):string {
