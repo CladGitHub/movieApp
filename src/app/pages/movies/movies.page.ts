@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 //import { SearchType, MovieService } from 'src/app/services/movie.service';
 import { SearchType, RsisearchService } from 'src/app/services/rsisearch.service';
+import { GetjsongiuService } from 'src/app/services/getjsongiu.service';
 
 @Component({
   selector: 'app-movies',
@@ -13,6 +14,8 @@ import { SearchType, RsisearchService } from 'src/app/services/rsisearch.service
 export class MoviesPage implements OnInit {
 
   results: Observable<any>;
+  getjson: Observable<any>;
+
   searchTerm: string = '';
   type: SearchType = SearchType.all;
   information = null;
@@ -20,9 +23,15 @@ export class MoviesPage implements OnInit {
    * Constructor of our first page
    * @param movieService The movie Service to get data
    */
-  constructor(private rsisearchService: RsisearchService) { }
+  constructor(private rsisearchService: RsisearchService, private getjsongiu: GetjsongiuService) { }
  
-  ngOnInit() { }
+  ngOnInit() { 
+    let id = "11392221";
+    
+    this.getjsongiu.showFilegiu( id );
+    console.log( "il json vale : " +  this.getjsongiu.getgiu( id ));
+    
+  }
  
   searchChanged() {
     // Call our service function which returns an Observable
